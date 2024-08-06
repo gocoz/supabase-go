@@ -104,6 +104,20 @@ type GenerateLinkResponse struct {
 	RedirectTo       string `json:"redirect_to"`
 }
 
+// Delete user
+func (a *Admin) Remove(ctx context.Context, userID string) (err error) {
+	reqURL := fmt.Sprintf("%s/%s/users/%s", a.client.BaseURL, AdminEndpoint, userID)
+	req, err := http.NewRequestWithContext(ctx, http.MethodDelete, reqURL, nil)
+	if err != nil {
+		return err
+	}
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", a.serviceKey))
+	if err := a.client.sendRequest(req, nil); err != nil {
+		return err
+	}
+	return
+}
+
 // Retrieve the user
 func (a *Admin) GetUser(ctx context.Context, userID string) (*AdminUser, error) {
 	reqURL := fmt.Sprintf("%s/%s/users/%s", a.client.BaseURL, AdminEndpoint, userID)
